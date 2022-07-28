@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Form } from "../../Components";
 const Login = ()=>{
  return <div className="Login">
@@ -7,4 +8,4 @@ const Login = ()=>{
  </div>
 }
 
-export default Login;
+export default memo(Login);
