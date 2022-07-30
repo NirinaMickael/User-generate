@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Form } from "../../Components";
+import { Form, Loading } from "../../Components";
 const Login = ()=>{
  return <div className="Login">
     <div>

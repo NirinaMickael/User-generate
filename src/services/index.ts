@@ -1,3 +1,2 @@
-import LoginService from "./LoginService";
-
-export {LoginService};
+import AuthService from "./AuthService";
+export {AuthService};

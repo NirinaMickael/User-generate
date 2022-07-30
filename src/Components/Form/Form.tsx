@@ -9,35 +9,43 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { LoginImg } from "../../Utilis";
 import { Controller, useForm } from "react-hook-form";
-import { LoginService } from "../../services";
+import { AuthService } from "../../services";
 import { LoadingCircular } from "../index";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
+import AuthContext from "../../Hooks/AuthContext";
 const theme = createTheme();
 const Form = () => {
   const { handleSubmit, reset, control } = useForm();
   const [loadingState, setLoading] = useState(false);
   const [test, setTest] = useState(false);
+  const {auth,setAuth} = useContext(AuthContext);
   const navigate = useNavigate();
   const onSubmit = async (data: any) => {
     setLoading(true);
-    const resp = await LoginService.loginUser(data);
-    if (resp.success) {
-      navigate("../dashboard", { replace: true });
-      setLoading(false);
-    } else {
-      setLoading(true);
-      setTimeout(() => {
-        setTest(true);
+    try {
+      const resp = await AuthService.loginUser(data);
+      if (resp.success) {
+        localStorage.setItem("token",resp.token);
+        setAuth();
+        navigate("../dashboard", { replace: true });
         setLoading(false);
-      }, 2000);
+      } else {
+        setLoading(true);
+        setTimeout(() => {
+          setTest(true);
+          setLoading(false);
+        }, 2000);
+      }
+    } catch (error) {
+      alert("error")
+      console.error(error);
     }
   };
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>
-        {/* <CssBaseline /> */}
         <Grid item xs={false} sm={5} md={7}>
           <LoginImg width={100} />
         </Grid>

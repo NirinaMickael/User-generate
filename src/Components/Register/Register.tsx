@@ -10,12 +10,27 @@ import { LoginImg } from "../../Utilis";
 import { Controller, useForm } from "react-hook-form";
 import { LoadingCircular } from "../index";
 import { useState } from "react";
+import { AuthService } from "../../services";
+import { useNavigate } from "react-router-dom";
+import Alert from "@mui/material/Alert";
 const theme = createTheme();
 const Register = () => {
   const { handleSubmit, control } = useForm();
   const [loadingState, setLoading] = useState(false);
-  const onSubmit = (data: any) => {
+  const [testError, setTestError] = useState(false);
+  const navigation = useNavigate();
+  const onSubmit = async (data: any) => {
     setLoading(true);
+    try {
+      const response =  await AuthService.registerUser(data);
+      if(response.success){
+        navigation("../login",{replace:true});
+      }else{
+        setTestError(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <ThemeProvider theme={theme}>
@@ -146,6 +161,11 @@ const Register = () => {
                 name="Register"
                 isLoading={loadingState}
               />
+                {testError && (
+                <Alert severity="error">
+                  This email is already taken..
+                </Alert>
+              )}
               <Grid container>
                 <Grid item>
                   <Link to="../">Sign in</Link>

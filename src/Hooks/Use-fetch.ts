@@ -3,8 +3,8 @@ const WrapPromise = (promise: Promise<any>) => {
   let resultat: any;
   let suspender = promise.then(
     (res) => {
-      status = "success";
-      resultat = res;
+      status="success";
+      resultat=res;
     },
     (err) => {
       status = "error";

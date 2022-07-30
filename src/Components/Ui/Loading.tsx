@@ -1,47 +1,48 @@
-import {memo} from 'react';
+import CircularProgress, {
+  CircularProgressProps,
+} from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import { green } from '@mui/material/colors';
-import Button from '@mui/material/Button';
-const LoadingCircular = ({action,name,isLoading}:{action:any,name:string,isLoading:boolean})=>{
-  const buttonSx = {
-    ...(!isLoading && {
-      bgcolor: green[500],
-      '&:hover': {
-        bgcolor: green[700],
-      },
-    }),
-  };
-  const handleButtonClick =() => {
-    action();
-  };
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+const Loading =(
+  props: CircularProgressProps & { value: number },
+) =>{
+  const navigation = useNavigate();
+  useEffect(()=>{
+     (()=>{
+      const token = localStorage.getItem("token");
+      if(token){
+        navigation('../dashboard',{replace:true});
+      }else{
+        navigation('../signin',{replace:true});
+      }
+     })();
+  },[]);
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ m: 1, position: 'relative' }}>
-        <Button
-          variant="contained"
-          sx={buttonSx}
-          disabled={isLoading}
-          onClick={handleButtonClick}
-        >
-        {name}
-        </Button>
-        {isLoading && (
-          <CircularProgress
-            size={24}
-            sx={{
-              color: green[500],
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              marginTop: '-12px',
-              marginLeft: '-12px',
-            }}
-          />
-        )}
+    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography
+          variant="caption"
+          component="div"
+          color="text.secondary"
+        >{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
   );
 }
-export default memo(LoadingCircular);
+
+export default Loading;

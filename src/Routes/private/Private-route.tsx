@@ -1,11 +1,19 @@
-import { Routes, Route} from "react-router-dom";
-import { Dashboard} from "../../Pages";
+import { Navigate} from "react-router-dom";
+export type  ProtectedRouteProps = {
+  isAuthenticated : boolean,
+  authenticationPath:string,
+  outlet : JSX.Element;
+} 
 
-const PrivateRoute = () => {
-  return (
-    <Routes>
-      <Route path='dashboard' element={ <Dashboard/>}/>
-    </Routes>
-  );
-};
+const PrivateRoute = (
+  {isAuthenticated,authenticationPath,outlet}:ProtectedRouteProps
+)=>{
+  if(isAuthenticated){
+    return outlet;
+  }else{
+    return <Navigate to={authenticationPath}/>
+  }
+}
+
+
 export default PrivateRoute;
